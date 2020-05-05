@@ -1,0 +1,11 @@
+{
+    "name": "Garry",
+    "version": "1.0",
+    "description": "Garry is the server utility bot. Please adhere to his commands...",
+    "main": "bot.js",
+    "author": "Michael Frederic",
+    "dependencies": {
+        "discord.io": "https://github.com/woor/discord.io/tarball/gateway_v6",
+        "winston": "^3.2.1"
+    }
+}
