@@ -1,6 +1,8 @@
 'use strict';
 
-const fetch = require("node-fetch");
+
+
+const {Builder, Capabilities} = require('selenium-webdriver');
 var Discord = require('discord.io');
 var logger = require('winston');
 var auth = require('./auth.json');
@@ -32,43 +34,38 @@ bot.on('message', function (user, userID, channelID, message, evt) {
         var cmd = args[0];
 
 
-        if(args.length > 1){
-            getG2a(args);
-
-        }
-
-
-        args = args.splice(1);
         switch (cmd) {
             // !ping
-            case 'trumpetJoin':
+            case 'trumpetJoin':{
                 bot.sendMessage({
                     to: channelID,
                     message: 'Your wish is my command.'
                 });
                 isTrumpetJoin = true;
-                break;
+                break;}
 
-            case 'trumpetLeave':
+            case 'trumpetLeave':{
                 bot.sendMessage({
                     to: channelID,
                     message: 'Your wish is my command.'
                 });
                 isTrumpetJoin = false;
-                break;
+                break;}
 
             // manages our search engine
-            case 'price':
-            bot.sendMessage({
-                to: channelID,
-                message: 'Now searching...'
-            });
+            case 'game':{
 
             if(isTrumpetJoin){
-                getG2a(cmd2, channelID);
+                bot.sendMessage({
+                    to: channelID,
+                    message: 'Now searching...'
+                });
+                getG2a(args, channelID);
+
+                
             }
            
-            break;
+            break;}
         }
     }
 });
@@ -89,13 +86,16 @@ bot.on("presenceUpdate", (oldMember, newMember) => {
 });
 
 //
-function getG2a(aSearch, channelID) {
-    var search = "https://www.g2a.com/lucene/search/filter?&search=";
+async function getG2a(aSearch, channelID) {
+    let driver = new Builder().forBrowser('chrome').build();
+    var search = "https://www.g2a.com/search?query=";
     var link = "https://www.g2a.com";
     
+    var casigningcert = "cacert.pem";
     
-    var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
-    let request = new XMLHttpRequest();
+    
+    // var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
+    // let request = new XMLHttpRequest();
     var gameJson;
     var id = 0;
 
@@ -103,25 +103,47 @@ function getG2a(aSearch, channelID) {
         var search = search.concat(aSearch[i],"+");
     }
 
+    try {
+        console.log(`Sending this search link ${search}`);
+        driver.get('http://www.google.com/')
+        (await driver).get("http://www.g2a.com/");
+        // (await driver).get(search);
+        
+        
+
+    }
+    catch {
+        // Navigate to Url
+        driver.quit();
+
+    }
+    finally{
+        driver.quit();
+    }
+
+
     console.log(`Sending this search link ${search}`);
 
-    request.open('GET',search, true);
-    request.withCredentials = true;
-    request.send();
-
-    request.onload = function() {
-        gameJson = request.responseText;
-        console.log(`here is our json ${gameJson}`);
-        postG2a(gameJson.docs[0].id);
-        link = link.concat(gameJson.docs[0].slug);
+    bot.sendMessage({
+        to: channelID,
+        message: `${search}`
+    });
+    // link = search;
 
 
-        bot.sendMessage({
-            to: channelID,
-            message: `${link}`
-        });
+    // request.onload = function() {
+    //     gameJson = request.responseText;
+    //     console.log(`here is our json ${gameJson}`);
+    //     postG2a(gameJson.docs[0].id);
+    //     link = link.concat(gameJson.docs[0].slug);
 
-      }
+
+        // bot.sendMessage({
+        //     to: channelID,
+        //     message: `test`
+        // });
+
+    //   }
 
       
 }
