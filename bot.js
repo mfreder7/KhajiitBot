@@ -1,13 +1,10 @@
 'use strict';
 
+const fetch = require("node-fetch");
 var Discord = require('discord.io');
 var logger = require('winston');
 var auth = require('./auth.json');
-var search = "https://www.g2a.com/lucene/search/filter?"; //generates search results.
-var priceSerch = "https://www.g2a.com/lucene/search/filter?"; //reliant on search results first.
-var text = "";
 var isTrumpetJoin = false;
-var isTrumpetLeave = false;
 
 const pairs = require('./channelPairs.json'); // Path for server/txt pairs
 
@@ -34,6 +31,13 @@ bot.on('message', function (user, userID, channelID, message, evt) {
         var args = message.substring(1).split(' ');
         var cmd = args[0];
 
+
+        if(args.length > 1){
+            getG2a(args);
+
+        }
+
+
         args = args.splice(1);
         switch (cmd) {
             // !ping
@@ -50,9 +54,21 @@ bot.on('message', function (user, userID, channelID, message, evt) {
                     to: channelID,
                     message: 'Your wish is my command.'
                 });
-                isTrumpetLeave = true;
+                isTrumpetJoin = false;
                 break;
-            // Just add any case commands if you want to..
+
+            // manages our search engine
+            case 'price':
+            bot.sendMessage({
+                to: channelID,
+                message: 'Now searching...'
+            });
+
+            if(isTrumpetJoin){
+                getG2a(cmd2, channelID);
+            }
+           
+            break;
         }
     }
 });
@@ -71,3 +87,59 @@ bot.on('guildMemberAdd', member => {
 bot.on("presenceUpdate", (oldMember, newMember) => {
 
 });
+
+//
+function getG2a(aSearch, channelID) {
+    var search = "https://www.g2a.com/lucene/search/filter?&search=";
+    var link = "https://www.g2a.com";
+    
+    
+    var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
+    let request = new XMLHttpRequest();
+    var gameJson;
+    var id = 0;
+
+    for (var i = 1; i < aSearch.length; i++ ) {
+        var search = search.concat(aSearch[i],"+");
+    }
+
+    console.log(`Sending this search link ${search}`);
+
+    request.open('GET',search, true);
+    request.withCredentials = true;
+    request.send();
+
+    request.onload = function() {
+        gameJson = request.responseText;
+        console.log(`here is our json ${gameJson}`);
+        postG2a(gameJson.docs[0].id);
+        link = link.concat(gameJson.docs[0].slug);
+
+
+        bot.sendMessage({
+            to: channelID,
+            message: `${link}`
+        });
+
+      }
+
+      
+}
+
+function postG2a(id){
+    var search = "https://www.g2a.com/marketplace/product/auctions/?id=";
+    var request = new XMLHttpRequest();
+    var search = search.concat(id);
+    request.open('GET',search);
+    request.responseType = 'json';
+    request.send();
+
+    request.onload = function() {
+        gameJson = request.response;
+
+
+
+      }
+
+
+}

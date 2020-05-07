@@ -6,6 +6,8 @@
     "author": "Michael Frederic",
     "dependencies": {
         "discord.io": "https://github.com/woor/discord.io/tarball/gateway_v6",
-        "winston": "^3.2.1"
+        "node-fetch": "^2.6.0",
+        "winston": "^3.2.1",
+        "xmlhttprequest": "^1.8.0"
     }
 }
