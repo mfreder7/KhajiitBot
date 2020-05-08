@@ -88,11 +88,9 @@ bot.on("presenceUpdate", (oldMember, newMember) => {
 //
 async function getG2a(aSearch, channelID) {
     let driver = new Builder().forBrowser('chrome').build();
-    var search = "https://www.g2a.com/search?query=";
+    var search = "https://www.g2a.com/lucene/search/filter?jsoncallback=jQuery111002521088376353553_1491736907010&skip=28837%2C28838%2C28847%2C28849%2C28852%2C28856%2C28857%2C28858%2C28859%2C28860%2C28861%2C28862%2C28863%2C28867%2C28868%2C28869%2C29472%2C29473%2C29474%2C29475%2C29476%2C29482%2C29486%2C33104&minPrice=0.00&maxPrice=640.00&cn=&kr=&stock=all&event=&platform=0&search=Grid+2";
     var link = "https://www.g2a.com";
-    
-    var casigningcert = "cacert.pem";
-    
+
     
     // var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
     // let request = new XMLHttpRequest();
@@ -105,20 +103,21 @@ async function getG2a(aSearch, channelID) {
 
     try {
         console.log(`Sending this search link ${search}`);
-        driver.get('http://www.google.com/')
-        (await driver).get("http://www.g2a.com/");
+        await driver.get('https://selenium.dev');
+        console.log(`trolololol debug`);
+        
         // (await driver).get(search);
         
         
 
     }
-    catch {
+    catch (error) {
         // Navigate to Url
-        driver.quit();
+        await  driver.quit();
 
     }
     finally{
-        driver.quit();
+        await  driver.quit();
     }
 
 
