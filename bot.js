@@ -58,7 +58,7 @@ bot.on('message', function (user, userID, channelID, message, evt) {
                 if(isTrumpetJoin){
                     bot.sendMessage({
                         to: channelID,
-                        message: 'Khajiit has wares, if you have coin...'
+                        message: '*Khajiit has wares, if you have coin...*'
                     });
                     counter++;
                     getG2a(args, channelID);
