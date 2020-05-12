@@ -86,6 +86,7 @@ bot.on('message', function (user, userID, channelID, message, evt) {
 async function getG2a(aSearch, channelID) {
     var search = "https://www.g2a.com/lucene/search/filter?&search=";
     var searchLink = "https://www.g2a.com/search?query=";
+    var found = false;
 
     for (var i = 1; i < aSearch.length; i++ ) {
         var search = search.concat(aSearch[i],"+");
@@ -133,9 +134,14 @@ async function getG2a(aSearch, channelID) {
                         // console.log("end URL = " + data.docs[i].slug);
                         
                         postG2a(data.docs[i].slug, channelID, searchLink);
+                        found = true;
                         break;
                     }
                 }
+                if (!found){
+                    postG2a(data.docs[0].slug, channelID, searchLink);
+                }
+                
             }
         })
 
@@ -194,8 +200,9 @@ async function postG2a(endUrl, channelID, searchLink){
                 description = data.info.meta.description;
             } else{
                 description = data.info.shortDescription;
-            } if(data.info.attributes.SteamAppID != null){
+            } if(data.info.attributes.SteamAppID != null && (data.info.type.name == "Games" || data.info.type.name == "Programs")){
                 steamLink = "https://store.steampowered.com/app/" + data.info.attributes.SteamAppID;
+                console.log(`Steam app ID: $${data.info.attributes.SteamAppID}`);
                 steamPrice = await getSteam(data.info.attributes.SteamAppID);
                 console.log(`Steam Price: $${steamPrice}`);
                 
@@ -313,10 +320,12 @@ await fetch(steamLink, {
         .then(function(data) {
             if (data[steamId].success == true){
                 console.log(`found json`);
+                if(!data[steamId].data.is_free){
                 if(!isNaN(data[steamId].data.price_overview.final)){
                     steamPrice = data[steamId].data.price_overview.final/100;
                     console.log(`Steam Price 1: $${steamPrice}`);
                 }
+            } 
         }
     });
 
