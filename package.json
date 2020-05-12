@@ -1,7 +1,7 @@
 {
-    "name": "Garry",
+    "name": "Khajiit",
     "version": "1.0",
-    "description": "Garry is the server utility bot. Please adhere to his commands...",
+    "description": " Khajiit has wares, if you have coin...",
     "main": "bot.js",
     "author": "Michael Frederic",
     "dependencies": {
