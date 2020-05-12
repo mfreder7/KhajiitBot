@@ -233,6 +233,9 @@ async function postG2a(endUrl, channelID, searchLink){
             }
 
         savingsPercent = savingsPercent.toFixed(0);
+        if (savingsPercent<0){
+            savingsPercent += 100;
+        }
             // console.log("Title = " + name);
             // console.log("Description = " + description);
             // console.log("Release date = " + release);
