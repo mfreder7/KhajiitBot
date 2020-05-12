@@ -1,15 +1,20 @@
 {
-    "name": "Khajiit",
-    "version": "1.0",
-    "description": " Khajiit has wares, if you have coin...",
-    "main": "bot.js",
-    "author": "Michael Frederic",
-    "dependencies": {
-        "discord.io": "https://github.com/woor/discord.io/tarball/gateway_v6",
-        "discord.js": "^12.2.0",
-        "node-fetch": "^2.6.0",
-        "selenium-webdriver": "^4.0.0-alpha.7",
-        "winston": "^3.2.1",
-        "xmlhttprequest": "^1.8.0"
-    } 
+  "name": "khajiit",
+  "version": "1.0.0",
+  "description": "A premium style Discord bot.",
+  "main": "bot.js",
+  "dependencies": {
+    "discord.io": "^2.5.3",
+    "discord.js": "^12.2.0",
+    "node-fetch": "^2.6.0",
+    "selenium-webdriver": "^4.0.0-alpha.7",
+    "winston": "^3.2.1",
+    "xmlhttprequest": "^1.8.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
 }
