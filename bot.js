@@ -5,10 +5,9 @@
 const fetch = require("node-fetch");
 const Discord = require('discord.io');
 const Disc2 = require('discord.js');
-var logger = require('winston');
-var auth = require('./auth.json');
+const logger = require('winston');
+const auth = require('./auth.json');
 var counter = 0;
-var isTrumpetJoin = true;
 
 // Configure logger settings
 logger.remove(logger.transports.Console);
@@ -30,6 +29,7 @@ bot.on('ready', function (evt) {
 });
 
 bot.on('message', function (user, userID, channelID, message, evt) {
+    var isTrumpetJoin = true;
     // Search for commands the begin with !
     if (message.substring(0, 1) == '!') {
         var args = message.substring(1).split(' ');
@@ -138,6 +138,10 @@ async function getG2a(aSearch, channelID) {
                 }
             }
         })
+
+        var search = null;
+        var searchLink = null;
+    
 }
 
 /**
@@ -152,6 +156,7 @@ async function postG2a(endUrl, channelID, searchLink){
     var link = "https://www.g2a.com";
     var search = "https://www.g2a.com/new/api/v1/products/";
     var endSearch = "?currency=USD&store=englishus&wholesale=false";
+    var data;
     var name;
     var description;
     var steamPrice;
@@ -179,7 +184,10 @@ async function postG2a(endUrl, channelID, searchLink){
     "method": "GET",
     "mode": "cors"
         }).then((resp) => resp.json()) // Transform the data into json
-        .then(function(data) {
+        .then(function(aData) {
+            data = aData;
+            
+  });
             name = data.info.name;
 
             if(data.info.meta.description != null){
@@ -188,11 +196,10 @@ async function postG2a(endUrl, channelID, searchLink){
                 description = data.info.shortDescription;
             } if(data.info.attributes.SteamAppID != null){
                 steamLink = "https://store.steampowered.com/app/" + data.info.attributes.SteamAppID;
-                if(data.info.attributes.steamprice!= null){
-                    steamPrice = data.info.attributes.steamprice;
-                } else {
-                    steamPrice = "----";
-                }
+                steamPrice = await getSteam(data.info.attributes.SteamAppID);
+                console.log(`Steam Price: $${steamPrice}`);
+                
+                
             } else{
                 steamLink = "https://store.steampowered.com/search/?term=";
                 steamPrice = "----";
@@ -246,27 +253,73 @@ async function postG2a(endUrl, channelID, searchLink){
             // console.log("Savings = $" + savings.toFixed(2));
             // console.log("Savings Percentage = " + savingsPercent.toFixed(0) +"%!");
 
-            //creates our embeded discord messge
-            var embedded = new Disc2.MessageEmbed()
-                .setColor('#0099ff')
-                .setTitle(name)
-                .setURL(link)
-                .setDescription(`[See more results...](${searchLink})\n` + description)
-                .setThumbnail(imageLink)
-                .addFields(
-                    { name: "G2A", value: (`[$${lowPrice}](${link})`), inline: true },
-                    { name: "Steam", value: (`[$${steamPrice}](${steamLink})`), inline: true },
-                    { name: "Discount Percentage", value: ("**" + (100-savingsPercent) + "%!**:fire:"), inline: true },
-                )
-                .setTimestamp()
-                .setFooter('Created by Michael Frederic', 'https://i.imgur.com/lBui3jx.png');
+//creates our embeded discord messge
+  var embedded = new Disc2.MessageEmbed()
+  .setColor('#0099ff')
+  .setTitle(name)
+  .setURL(link)
+  .setDescription(`[See more results...](${searchLink})\n` + description)
+  .setThumbnail(imageLink)
+  .addFields(
+      { name: "G2A", value: (`[$${lowPrice}](${link})`), inline: true },
+      { name: "Steam", value: (`[$${steamPrice}](${steamLink})`), inline: true },
+      { name: "Discount Percentage", value: ("**" + (100-savingsPercent) + "%!**:fire:"), inline: true },
+  )
+  .setTimestamp()
+  .setFooter('Created by Michael Frederic', 'https://i.imgur.com/lBui3jx.png');
 
-                bot.sendMessage({
-                    to: channelID,
-                    embed: embedded
-                });
-
-  
+  bot.sendMessage({
+      to: channelID,
+      embed: embedded
   });
+
+  return 1;
+
+
+
+}
+
+/**
+ * Gets the data from steam.
+ * 
+ * @param {*} steamId - the game id that is requested.
+ * @returns {*} - price of the game on steam
+ */
+async function getSteam(steamId) {
+    var steamLink = "https://store.steampowered.com/api/appdetails?appids=";
+    var steamPrice = 0;
+
+    steamLink = steamLink.concat(steamId);
+    console.log(`Sending this steam link ${steamLink}`);
+
+await fetch(steamLink, {
+  "headers": {
+    "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+    "accept-language": "en-US,en;q=0.9,es;q=0.8",
+    "cache-control": "max-age=0",
+    "if-modified-since": "Tue, 12 May 2020 17:00:00 GMT",
+    "sec-fetch-dest": "document",
+    "sec-fetch-mode": "navigate",
+    "sec-fetch-site": "none",
+    "sec-fetch-user": "?1",
+    "upgrade-insecure-requests": "1",
+    // "cookie": "browserid=1602661419240582024; steamCountry=US%7C7ea1e7e5c068f08aedcb864b205af953; sessionid=a4f525981d1d330bcf01e450; timezoneOffset=-25200,0; _ga=GA1.2.1454238702.1587099699; steamMachineAuth76561198178498587=0FC94A6867F1D336EDD2E75CE0A5F6E07A75A093; _gid=GA1.2.286248676.1589134623; steamMachineAuth76561198174410709=227E9A6B783B2235552EB04A5859A1F655D21F4B; deep_dive_carousel_focused_app=730; deep_dive_carousel_method=; birthtime=754732801; lastagecheckage=1-0-1994; recentapps=%7B%22632360%22%3A1589248993%2C%2210090%22%3A1589236928%2C%2244350%22%3A1588993009%2C%221094000%22%3A1588990579%2C%22548430%22%3A1588977750%2C%22945360%22%3A1588558538%2C%22700330%22%3A1588558452%2C%22646910%22%3A1588254674%2C%22284160%22%3A1588218905%7D; app_impressions=350640@1_4_4__139_3|861650@1_4_4__139_3|456670@1_4_4__139_3|1100600@1_4_4__139_2|10090@1_4_4__139_2|503940@1_4_4__139_2|42700@1_4_4__139_1|220200@1_4_4__139_1|632470@1_4_4__139_1|1163670@1_4_4_|289950@1_4_4__43_1|1317390@1_4_4__40_1"
+  },
+  "referrerPolicy": "no-referrer-when-downgrade",
+  "body": null,
+  "method": "GET",
+  "mode": "cors"
+}) .then((resp) => resp.json()) // Transform the data into json
+        .then(function(data) {
+            if (data[steamId].success == true){
+                console.log(`found json`);
+                if(!isNaN(data[steamId].data.price_overview.final)){
+                    steamPrice = data[steamId].data.price_overview.final/100;
+                    console.log(`Steam Price 1: $${steamPrice}`);
+                }
+        }
+    });
+
+    return steamPrice;
 
 }
