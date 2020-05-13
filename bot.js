@@ -273,7 +273,7 @@ async function postG2a(endUrl, channelID, searchLink){
       { name: "Discount Percentage", value: ("**" + (100-savingsPercent) + "%!**:fire:"), inline: true },
   )
   .setTimestamp()
-  .setFooter('Created by Michael Frederic', 'https://i.imgur.com/lBui3jx.png');
+  .setFooter('https://ko-fi.com/welovethis', 'https://i.imgur.com/f2r0oyj.png');
 
   bot.sendMessage({
       to: channelID,
