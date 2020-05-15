@@ -1,5 +1,7 @@
 ## Khajiit Bot (previously GarryBot)
+
 ***Khajiit has wares, if you have coin..._***
+
 
 Khajiit searches G2A and Steam, then compares the prices and returns a embedded message with links to both and a price comparison. Use "!game name of game" to search.
 
@@ -27,3 +29,5 @@ Khajiit searches G2A and Steam, then compares the prices and returns a embedded 
 
 ## Images
 ![bot example](https://i.imgur.com/mPQVfXc.png)
+[![bot logo](https://i.imgur.com/ZJCKkPt.png)](https://milan-frederic.wixsite.com/milan)
+
