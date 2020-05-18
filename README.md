@@ -11,10 +11,15 @@ https://discord.com/api/oauth2/authorize?client_id=696797425502781470&permission
 Khajiit searches G2A and Steam, then compares the prices and returns a embedded message with links to both and a price comparison. Use "!game name of game" to search.
 
 	Currently Khajiit only responds with Global & North American results in USD $. 
+		
 		Future additions:
 		1. Even more market places to compare prices with.
 		2. The ability to choose more regions to search by.
 		3. Cool phrases/witty responses when you search.
+	
+		Future code changes:
+		1. Remove nested .thens in favor of cleaner code
+		2. Declare variables inline instead of ahead time (OOP habits)
 	
 	If you love this bot and want to help out with my ramen fund please donate
 	using the button below and leave me a message, I love to hear feedback on my
