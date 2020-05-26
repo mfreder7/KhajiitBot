@@ -16,5 +16,13 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mfreder7/KhajiitBot.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mfreder7/KhajiitBot/issues"
+  },
+  "homepage": "https://github.com/mfreder7/KhajiitBot#readme"
 }
