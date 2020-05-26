@@ -38,6 +38,6 @@ Khajiit searches G2A and Steam, then compares the prices and returns a embedded 
  5. Discount % between the two
 
 ## Images
-![bot example](https://i.imgur.com/mPQVfXc.png)
+![bot example](https://i.imgur.com/1hzj02D.jpg)
 [![bot logo](https://i.imgur.com/ZJCKkPt.png)](https://milan-frederic.wixsite.com/milan)
 
