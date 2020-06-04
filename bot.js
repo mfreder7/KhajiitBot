@@ -1,12 +1,11 @@
 'use strict';
 
-
-
 const fetch = require('node-fetch');
-const Discord = require('discord.io');
-const Disc2 = require('discord.js');
+const Discord = require('discord.js');
 const logger = require('winston');
-const auth = require('./auth.json');
+const {prefix, token} = require('./auth.json');
+const bot = new Discord.Client();
+
 var counter = 0;
 
 // Configure logger settings
@@ -17,77 +16,62 @@ logger.add(new logger.transports.Console, {
 
 logger.level = 'debug';
 // Initialize Discord Bot
-var bot = new Discord.Client({
-  token: auth.token,
-  autorun: true
+
+
+bot.once('ready', () => {
+  
+  logger.info(`Khajiit has started!`);
 });
 
-bot.on('ready', function (evt) {
-  logger.info('Connected');
-  logger.info('Logged in as: ');
-  logger.info(bot.username + ' - (' + bot.id + ')');
-});
+bot.login(`${token}`);
 
-bot.on('message', function (user, userID, channelID, message, evt) {
+bot.on('message', message => {
+  if (!message.content.startsWith(prefix) || message.author.bot) return;
   var isTrumpetJoin = true;
   // Search for commands the begin with !
-  if (message.substring(0, 1) == '!') {
-    var args = message.substring(1).split(' ');
+  if (message.content.substring(0, 1) == prefix) {
+    var args = message.content.substring(1).split(' ');
     var cmd = args[0];
 
-    // // !trumpetJoin - toggle the bot (on without needing to exit). Default value = true.
-    // if (cmd == 'trumpetJoin') {
-    //   bot.sendMessage({
-    //     to: channelID,
-    //     message: 'Your wish is my command.'
-    //   });
-    //   isTrumpetJoin = true;
-    // }
-
-    // // !trumpeLeave - toggle the bot (off without needing to exit)
-    // else if (cmd == 'trumpetLeave') {
-    //   bot.sendMessage({
-    //     to: channelID,
-    //     message: 'Your wish is my command.'
-    //   });
-    //   isTrumpetJoin = false;
-    // }
 
     // !game - searches g2a/steam and compares prices and displays the result.
     if (cmd == 'game') {
       if (isTrumpetJoin) {
-        bot.sendMessage({
-          to: channelID,
-          message: '*Khajiit has wares, if you have coin...*'
-        });
+        message.channel.send('*Khajiit has wares, if you have coin...*');
+        logger.info(`Request from: ${message.author.id}`);
         counter++;
-        getG2a(args, channelID);
+        getG2a(args, message.channel, message.author.id);
       }
     }
     // !searches - returns 
-    else if (cmd == 'searches') {
+    else if (cmd == 'searches' && message.author.id == 183986797586546689) {
       if (isTrumpetJoin) {
-        bot.sendMessage({
-          to: channelID,
-          message: `There has been **${counter}** searches since the last time my owner reset my batteries.`
-        });
+        message.channel.send( `There has been **${counter}** searches since the last time my owner reset my batteries.`);
       }
     }
 
+  
+
+  else if (cmd == 'servers' && message.author.id == 183986797586546689) {
+      if (isTrumpetJoin) {
+        message.channel.send(`Server count: ${bot.guilds.cache.size}`);
+      }
+    }
   }
+  
 });
 
 /**
  * Searches G2A for the requested game.
  * 
  * @param {*} aSearch - the game that is requested.
- * @param {*} channelID - - the channel that the request originates from.
+ * @param {*} aChannel - - the channel that the request originates from.
  */
-async function getG2a(aSearch, channelID) {
+async function getG2a(aSearch, aChannel, authorID) {
   var search = "https://www.g2a.com/lucene/search/filter?&search=";
-  var searchLink = "https://www.g2a.com/search?query=";
+  var searchLink = "https://www.g2a.com/search?___currency=USD&mkey=7m7vq&utm_source=KhajiitBot&utm_medium=price_comparison&utm_campaign=KhajiitBot&query=";
   var found = false;
-
+  
   for (var i = 1; i < aSearch.length; i++) {
     var search = search.concat(aSearch[i], "+");
     var searchLink = searchLink.concat(aSearch[i], "+");
@@ -96,10 +80,7 @@ async function getG2a(aSearch, channelID) {
   const response = await httpGet(search);
   const data = await response.json();
   if (data.docs.length < 1) {
-    bot.sendMessage({
-      to: channelID,
-      message: 'No results were returned...'
-    });
+    message.channel.send('No results were returned...');
 
   } else {
     for (var i = 0; i < data.docs.length; i++) {
@@ -116,13 +97,13 @@ async function getG2a(aSearch, channelID) {
         // console.log("catalog id = " + data.docs[i].catalogId);
         // console.log("end URL = " + data.docs[i].slug);
 
-        postG2a(data.docs[i].slug, channelID, searchLink);
-        found = true;
-        break;
-      }
+        postG2a(data.docs[i].slug, aChannel, searchLink, authorID);
+          found = true;
+          break;
+        }
     }
     if (!found) {
-      postG2a(data.docs[0].slug, channelID, searchLink);
+      postG2a(data.docs[0].slug, aChannel, searchLink, authorID);
     }
 
   }
@@ -133,10 +114,10 @@ async function getG2a(aSearch, channelID) {
  * sends it to the channel that it was requested at.
  * 
  * @param {string} endUrl - string to append search to the url in order to pull up the game.
- * @param {string} channelID - channel to send message too.
+ * @param {string} aChannel - channel to send message too.
  * @param {string} searchLink - search link for the embedded message
  */
-async function postG2a(endUrl, channelID, searchLink) {
+async function postG2a(endUrl, aChannel, searchLink, authorID) {
   const link = `https://www.g2a.com${endUrl}?___currency=USD&mkey=7m7vq&utm_source=KhajiitBot&utm_medium=price_comparison&utm_campaign=KhajiitBot`;
   const search = `https://www.g2a.com/new/api/v1/products/${endUrl}?currency=USD&store=englishus&wholesale=false`;
 
@@ -177,7 +158,7 @@ async function postG2a(endUrl, channelID, searchLink) {
   }
 
   // Create and send the discord message.
-  var embedded = new Disc2.MessageEmbed()
+  var embedded = new Discord.MessageEmbed()
     .setColor('#0099ff')
     .setTitle(name)
     .setURL(link)
@@ -186,14 +167,11 @@ async function postG2a(endUrl, channelID, searchLink) {
     .addFields(
       { name: "G2A", value: (`[$${lowPrice || '----'}](${link})`), inline: true },
       { name: "Steam", value: (`[$${steamPrice || '----'}](${steamLink})`), inline: true },
-      { name: "Discount Percentage", value: (`**${savingsPercent || '----'}%!**:fire:`), inline: true },
+      { name: "Discount Percentage", value: (`**${savingsPercent || '0'}%!**:fire:`), inline: true },
     )
     .setTimestamp()
     .setFooter('https://ko-fi.com/welovethis', 'https://i.imgur.com/f2r0oyj.png');
-  bot.sendMessage({
-    to: channelID,
-    embed: embedded
-  });
+    aChannel.send(embedded);
 }
 
 /** HTTP GETs a URL as-if a user on a web browser was requesting it. */
