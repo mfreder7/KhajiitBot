@@ -6,7 +6,7 @@
 Want to add Khajiit to your discord server? 
 Just follow the link below:
 
-https://discord.com/api/oauth2/authorize?client_id=696797425502781470&permissions=92224&scope=bot
+[![Khajiit](https://i.imgur.com/6wSy4c8.png)](https://discord.com/api/oauth2/authorize?client_id=696797425502781470&permissions=92224&scope=bot)
 
 Khajiit searches G2A and Steam, then compares the prices and returns a embedded message with links to both and a price comparison. Use "!game name of game" to search.
 
