@@ -17,9 +17,6 @@ Khajiit searches G2A and Steam, then compares the prices and returns a embedded 
 		2. The ability to choose more regions to search by.
 		3. Cool phrases/witty responses when you search.
 	
-		Future code changes:
-		1. Remove nested .thens in favor of cleaner code
-		2. Declare variables inline instead of ahead time (OOP habits)
 	
 	If you love this bot and want to help out with my ramen fund please donate
 	using the button below and leave me a message, I love to hear feedback on my
