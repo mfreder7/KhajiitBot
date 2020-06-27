@@ -2,7 +2,6 @@
 
 ***Khajiit has wares, if you have coin..._***
 
-
 Want to add Khajiit to your discord server? 
 Just follow the link below:
 
@@ -10,13 +9,10 @@ Just follow the link below:
 
 Khajiit searches G2A and Steam, then compares the prices and returns a embedded message with links to both and a price comparison. Use "!game name of game" to search.
 
-	Currently Khajiit only responds with Global & North American results in USD $. 
+	Want a different currency? Check out bellow! 
 		
-		Future additions:
-		1. Even more market places to compare prices with.
-		2. The ability to choose more regions to search by.
-		3. Cool phrases/witty responses when you search.
-	
+		Countries:
+		1. UK (£) - [Add Chet (UK version)](https://discord.com/api/oauth2/authorize?client_id=726493269868937328&permissions=92224&scope=bot)
 	
 	If you love this bot and want to help out with my ramen fund please donate
 	using the button below and leave me a message, I love to hear feedback on my
