@@ -2,7 +2,7 @@
 
 ***Khajiit has wares, if you have coin..._***
 
-Disclaimer: This is the original base code used on Khajiit. Since release further development has gone private. I wanted to leave this here as an example of how webscraping and bots can be used together to provide convenient services. If you are a potential employer and would like to see the latest code please email: michael.c.frederic@gmail.com.
+**Disclaimer:** This is the original base code used on Khajiit. Since release further development has gone private. I wanted to leave this here as an example of how webscraping and bots can be used together to provide convenient services. If you are a potential employer and would like to see the latest code please email: michael.c.frederic@gmail.com.
 
 Want to add Khajiit to your discord server? 
 Just follow the link below:
