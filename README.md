@@ -14,7 +14,7 @@ Khajiit searches G2A and Steam, then compares the prices and returns a embedded 
 	Want a different currency? Check out bellow! 
 		
 		Countries:
-		1. UK (£) - [Add Chet (UK version)](https://discord.com/api/oauth2/authorize?client_id=726493269868937328&permissions=92224&scope=bot)
+		1. UK (£) - https://discord.com/api/oauth2/authorize?client_id=726493269868937328&permissions=92224&scope=bot
 	
 	If you love this bot and want to help out with my ramen fund please donate
 	using the button below and leave me a message, I love to hear feedback on my
